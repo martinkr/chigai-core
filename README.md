@@ -28,10 +28,10 @@ Chigai-core is not meant to be used directly. Use the CLI or the API modules. Th
 
 # Tech Stack
 - ECMAScript 2018 on ```nodejs v8.5.0```
-- ```blink-diff v^1.0.1```
+- ```blink-diff v1.0.1```
 - ```fs-extra-plus v0.1.3```
 - ```puppeteer v0.11.0```
-- 100% code coverage using ```mocha v3.5.2```, ```chai v4.1.2``` and```nyc v11.2.1``,
+- 100% code coverage using ```mocha v3.5.2```, ```chai v4.1.2``` and ```nyc v11.2.1```,
 
 ## Resources
 - [GoogleChrome/puppeteer - Headless Chrome Node API](https://github.com/GoogleChrome/puppeteer)
