@@ -5,8 +5,7 @@
   "main": "./app/main.js",
   "license": "MIT",
   "engines": {
-    "node": ">=8.5.5",
-    "yarn": "latest"
+    "node": ">=8.5.5"
   },
   "repository": {
     "type": "git",
