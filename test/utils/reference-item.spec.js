@@ -52,6 +52,11 @@ describe(`the module ${thisModulePath}`, () => {
 		await fs.ensureFile(referenceItem);
 	});
 
+
+	after(async() => {
+		await fs.emptyDir(path.join("./", "screenshots"));
+	});
+
 	describe("should rely on all arguments and handle all errors", () => {
 
 		it("should throw if theres no argument ", (async () => {

@@ -39,6 +39,9 @@ describe(`the module ${thisModulePath}`, () => {
 		await fs.emptyDir(path.join("./", "screenshots"));
 	});
 
+	after(async() => {
+		await fs.emptyDir(path.join("./", "screenshots"));
+	});
 
 	describe("should provide an API for regression testing. It:", () => {
 

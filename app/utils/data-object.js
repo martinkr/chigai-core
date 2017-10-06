@@ -24,7 +24,6 @@ const currentModule = "data-object"
  * Creates and valdiates the data object
  * @TODO: curry function
  * @TODO: clone item
- * @TODO: moce thresholt as 0-100 to cli options
  * @sync
  * @exports a sync function
  * @memberof module:data-object
@@ -35,7 +34,7 @@ module.exports = (object) => {
 	const uri = object.uri;
 	const options = object.options || {};
 
-	if (!uri || typeof(uri) !== "string" ) {
+	if (!uri || typeof(uri) !== "string" ) {
 		throw new Error(`${currentModule} missing location item.uri`);
 	}
 

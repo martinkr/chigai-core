@@ -51,6 +51,9 @@ describe(`the module ${thisModulePath}`, () => {
 		testServer = server.listen(port);
 	});
 
+	after(async() => {
+		await fs.emptyDir(path.join("./", "screenshots"));
+	});
 
 	describe("should handle errors", () => {
 

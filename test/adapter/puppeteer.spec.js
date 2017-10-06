@@ -56,6 +56,9 @@ describe(`the module ${thisModulePath}`, () => {
 		await fs.emptyDir(path.join("./", "screenshots"));
 	});
 
+	after(async() => {
+		await fs.emptyDir(path.join("./", "screenshots"));
+	});
 
 	describe("should handle errors", () => {
 

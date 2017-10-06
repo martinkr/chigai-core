@@ -72,6 +72,10 @@ describe(`the module ${thisModulePath}`, () => {
 		stubAndReturn(true);
 	})
 
+	after(async() => {
+		await fs.emptyDir(path.join("./", "screenshots"));
+	});
+
 	describe("should handle errors", () => {
 
 		it("should throw if there's no argument", (async() => {
