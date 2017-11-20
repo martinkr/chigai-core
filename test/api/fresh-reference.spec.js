@@ -44,7 +44,8 @@ const stubAndReturn = ((value) => {
 });
 
 // setup data
-const dataPath = path.join("./", "screenshots");
+const dataPathDefault = path.join("./", "screenshots");
+const dataPathCustom = path.join("./", "/test/_tmp/customfolder");
 const hash = crypto.createHash("sha512").update(`http://localhost:${port}/static` + 1024 + 786).digest("hex");
 const regressionItem = path.join("./", "screenshots", hash + "_regression.png");
 const referenceItem = path.join("./", "screenshots", hash + "_reference.png");
@@ -54,6 +55,7 @@ const createItem = () => {
 	let item = {}
 	item.uri = `http://localhost:${port}/static`;
 	item.hash = hash;
+	item.options = {};
 	return item;
 };
 
@@ -66,7 +68,8 @@ describe(`the module ${thisModulePath}`, () => {
 
 	beforeEach(async () => {
 		testServer = server.listen(port);
-		await fs.emptyDir(dataPath);
+		await fs.remove(dataPathCustom);
+		await fs.emptyDir(dataPathDefault);
 		await fs.ensureFile(regressionItem);
 		await fs.ensureFile(referenceItem);
 		stubAndReturn(true);
@@ -109,6 +112,16 @@ describe(`the module ${thisModulePath}`, () => {
 	});
 
 	describe("should work as expected", () => {
+
+		it("should ensure the screenshot directory is available", (async() => {
+			let result;
+			let item = createItem();
+			item.options.path = dataPathCustom;
+			// stubAndReturn(true);
+			result = await thisModule([item]);
+			result = await fs.pathExists(dataPathCustom);
+			result.should.be.ok;
+		}));
 
 		it("should return an array", (async() => {
 			let result;

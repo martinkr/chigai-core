@@ -45,11 +45,12 @@ const stubAndReturn = ((value) => {
 });
 
 // setup data
-const dataPath = path.join("./test/", "data");
+const dataPathDefault = path.join("./test/", "data");
+const dataPathCustom = path.join("./", "/test/_tmp/customfolder");
 const hash = crypto.createHash("sha512").update(`http://localhost:${port}/static` + 500 + 500).digest("hex");
-const regressionItem = path.join(dataPath, hash + "regression.png");
-const referenceItem = path.join(dataPath, hash + "reference.png");
-const differenceItem = path.join(dataPath, hash + "difference.png");
+const regressionItem = path.join(dataPathDefault, hash + "regression.png");
+const referenceItem = path.join(dataPathDefault, hash + "reference.png");
+const differenceItem = path.join(dataPathDefault, hash + "difference.png");
 
 /** creates a data-object as argument */
 const createItem = () => {
@@ -61,6 +62,7 @@ const createItem = () => {
 	item.regression_item = regressionItem;
 	item.reference_item = referenceItem;
 	item.difference_item = differenceItem;
+	item.options = {};
 	return item;
 };
 
@@ -76,7 +78,8 @@ describe(`the module ${thisModulePath}`, () => {
 	});
 
 	after(async() => {
-		await fs.emptyDir(path.join("./", "screenshots"));
+		await fs.emptyDir(dataPathDefault);
+		await fs.remove(dataPathCustom);
 	});
 
 	describe("should handle errors", () => {
@@ -120,6 +123,16 @@ describe(`the module ${thisModulePath}`, () => {
 	});
 
 	describe("should work as expected", () => {
+
+		it("should ensure the screenshot directory is available", (async() => {
+			let result;
+			let item = createItem();
+			item.options.path = dataPathCustom;
+			stubAndReturn(true);
+			result = await thisModule([item]);
+			result = await fs.pathExists(dataPathCustom);
+			result.should.be.ok;
+		}));
 
 		it("should give one result for one item ", (async () => {
 			let result;

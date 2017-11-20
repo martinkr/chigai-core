@@ -17,10 +17,10 @@
  */
 
 // imports
-let fs = require("fs-extra-plus");
-let screenshot = require("./../adapter/puppeteer");
-let reference = require("./../utils/reference-item");
-let dataObject = require("./../utils/data-object");
+const fs = require("fs-extra-plus");
+const screenshot = require("./../adapter/puppeteer");
+const reference = require("./../utils/reference-item");
+const dataObject = require("./../utils/data-object");
 
 // whoami
 const currentModule = "api/fresh-reference";
@@ -46,7 +46,9 @@ module.exports = async (items) => {
 
 	await Promise.all(items.map(async (item) => {
 		let screenshotItem = item;
+		await fs.ensureDir(screenshotItem.path);
 		await fs.remove(screenshotItem.reference_item);
+		await fs.ensureDir(screenshotItem.path);
 		screenshotItem = await screenshot(screenshotItem);
 		screenshotItem = await reference(screenshotItem);
 		return screenshotItem;

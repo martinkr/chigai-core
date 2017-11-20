@@ -73,6 +73,25 @@ describe(`the module ${thisModulePath}`, () => {
 			result.hash.should.be.a("string");
 		}));
 
+		it("should return a data object with: a path for the screenshots", (async () => {
+			let result;
+			result = await thisModule(createItem("http://", {}));
+			result.path.should.be.a("string");
+		}));
+
+		it("should return a data object with: a default path \"./screenshots\"", (async () => {
+			let result;
+			result = await thisModule(createItem("http://", {}));
+			result.path.should.equal(path.join(process.cwd(), "./screenshots"));
+		}));
+
+		it("should return a data object with: a custom path if \"path\" is a given option", (async () => {
+			let result;
+			result = await thisModule(createItem("http://", {"path": "./../myscreenshots"}));
+			result.path.should.equal(path.join(process.cwd(), "./../myscreenshots"));
+		}));
+
+
 		it("should return a data object with: a hash based on uri, vw, vh", (async () => {
 			let result;
 			result = await thisModule(createItem("http://", {"vw": 100, "vh": 200 }));

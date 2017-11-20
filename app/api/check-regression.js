@@ -18,10 +18,11 @@
  */
 
 // imports
-let compare = require("./../adapter/blink-diff");
-let screenshot = require("./../adapter/puppeteer");
-let reference = require("./../utils/reference-item");
-let dataObject = require("./../utils/data-object");
+const fs = require("fs-extra-plus");
+const compare = require("./../adapter/blink-diff");
+const screenshot = require("./../adapter/puppeteer");
+const reference = require("./../utils/reference-item");
+const dataObject = require("./../utils/data-object");
 
 // whoami
 const currentModule = "api/check-regression"
@@ -47,6 +48,7 @@ module.exports = async (items) => {
 
 	await Promise.all(items.map(async (item) => {
 		let screenshotItem = item;
+		await fs.ensureDir(screenshotItem.path);
 		screenshotItem = await screenshot(screenshotItem);
 		screenshotItem = await reference(screenshotItem);
 		screenshotItem = await compare(screenshotItem);

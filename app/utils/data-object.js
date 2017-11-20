@@ -17,6 +17,7 @@
 const path = require("path");
 const crypto = require("crypto");
 
+
 // whoami
 const currentModule = "data-object"
 
@@ -33,6 +34,7 @@ const currentModule = "data-object"
 module.exports = (object) => {
 	const uri = object.uri;
 	const options = object.options || {};
+	const screenshotsPath = options.path || "./screenshots";
 
 	if (!uri || typeof(uri) !== "string" ) {
 		throw new Error(`${currentModule} missing location item.uri`);
@@ -47,9 +49,10 @@ module.exports = (object) => {
 
 	item.timestamp_iso = new Date(new Date().getTime()).toString();
 	item.hash = crypto.createHash("sha512").update(uri + item.viewport.width + item.viewport.height).digest("hex");
-	item.regression_item = path.join("./", "screenshots", item.hash+"_regression.png");
-	item.reference_item = path.join("./", "screenshots", item.hash+"_reference.png");
-	item.difference_item = path.join("./", "screenshots", item.hash+"_difference.png");
+	item.path = path.join(process.cwd(), screenshotsPath);
+	item.regression_item = path.join(process.cwd(), screenshotsPath, item.hash+"_regression.png");
+	item.reference_item = path.join(process.cwd(), screenshotsPath, item.hash+"_reference.png");
+	item.difference_item = path.join(process.cwd(), screenshotsPath, item.hash + "_difference.png");
 	item.match = undefined;
 	item.screenshot = undefined;
 	item.fresh = undefined;

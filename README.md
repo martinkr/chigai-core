@@ -15,7 +15,7 @@ Chigai-Core provides the core functionalities. The regression testing of a given
 Chigai-core is not meant to be used directly. Use the CLI or the API modules. They provide a clean facade for the core functions.
 
 ## Regression testing
-Provide a url and options such as the viewport width (default: 1024), viewport height (default: 720) or a threshold (default: 0.01 = 1%) for the image comparison. Chigai-core creates a new screenshot of the whole page and compares it to the last specified reference. If their difference is lower than the given threshold, ```match```will be ```true```. Otherwise, ```match``` becomes ```false```.
+Provide a url and options such as the viewport width (default: 1024), viewport height (default: 720) or a threshold (default: 0.01 = 1%) for the image comparison. Chigai-core creates a new screenshot of the whole page and compares it to the last specified reference. If their difference is lower than the given threshold, ```match```will be ```true```. Otherwise, ```match``` becomes ```false```. There's the possiblitly to pass a custom path to chigai - use this to share your reference items (e.g. via source control, rsync ...).
 
 ## Fresh reference
 If you know  you changed the layout, just set a new reference item before running the tests again.
