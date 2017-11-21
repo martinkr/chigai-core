@@ -17,7 +17,6 @@
 const path = require("path");
 const crypto = require("crypto");
 
-
 // whoami
 const currentModule = "data-object"
 
@@ -26,12 +25,12 @@ const currentModule = "data-object"
  * @TODO: curry function
  * @TODO: clone item
  * @sync
- * @exports a sync function
+ * @exports an async function
  * @memberof module:data-object
  * @param {object}  with the properties "uri" the location to screenshot and "[options]" additional options, e.g. viewport sizes
  * @returns {Object} an object containing all necessary properties
  */
-module.exports = (object) => {
+module.exports = async (object) => {
 	const uri = object.uri;
 	const options = object.options || {};
 	const screenshotsPath = options.path || "./screenshots";

@@ -40,9 +40,9 @@ module.exports = async (items) => {
 		throw new Error(`${currentModule} missing items`);
 	}
 
-	items = items.map((item) => {
-		return dataObject(item);
-	});
+	items = await Promise.all(items.map(async (item) => {
+		return await dataObject(item);
+	}));
 
 	await Promise.all(items.map(async (item) => {
 		let screenshotItem = item;
