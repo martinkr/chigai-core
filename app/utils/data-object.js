@@ -16,14 +16,14 @@
 // imports
 const path = require("path");
 const crypto = require("crypto");
+const configFile = require("./config-file.js");
 
 // whoami
 const currentModule = "data-object"
 
 /**
  * Creates and valdiates the data object
- * @TODO: curry function
- * @TODO: clone item
+ * @TODO: WRITE TESTS FOR PASSED OPTIONS TAKES PRECEDENCE
  * @sync
  * @exports an async function
  * @memberof module:data-object
@@ -32,26 +32,27 @@ const currentModule = "data-object"
  */
 module.exports = async (object) => {
 	const uri = object.uri;
-	const options = object.options || {};
-	const screenshotsPath = options.path || "./screenshots";
+	const config = await configFile();
+	const options = Object.assign({}, config, object.options);
+	const screenshotsPath = config.path;
 
-	if (!uri || typeof(uri) !== "string" ) {
+	if (!uri || typeof (uri) !== "string") {
 		throw new Error(`${currentModule} missing location item.uri`);
 	}
 
 	let item = { viewport: {} };
 	item.uri = uri;
 	// item.threshold = 0.01;
-	item.threshold = !!Number(options.threshold) && typeof(options.threshold) !== "boolean" ? Number(options.threshold) : 0.01;
-	item.viewport.width = !!Number(options.vw) && typeof(options.vw) !== "boolean" ? Number(options.vw) : 1024;
-	item.viewport.height = !!Number(options.vh) && typeof(options.vh) !== "boolean" ? Number(options.vh) : 786;
+	item.threshold = !!Number(options.threshold) && typeof(options.threshold) !== "boolean" ? Number(options.threshold) : config.threshold;
+	item.viewport.width = !!Number(options.vw) && typeof(options.vw) !== "boolean" ? Number(options.vw) : config.vw;
+	item.viewport.height = !!Number(options.vh) && typeof(options.vh) !== "boolean" ? Number(options.vh) : config.vh;
 
 	item.timestamp_iso = new Date(new Date().getTime()).toString();
 	item.hash = crypto.createHash("sha512").update(uri + item.viewport.width + item.viewport.height).digest("hex");
-	item.path = path.join(process.cwd(), screenshotsPath);
-	item.regression_item = path.join(process.cwd(), screenshotsPath, item.hash+"_regression.png");
-	item.reference_item = path.join(process.cwd(), screenshotsPath, item.hash+"_reference.png");
-	item.difference_item = path.join(process.cwd(), screenshotsPath, item.hash + "_difference.png");
+	item.path = path.resolve(screenshotsPath);
+	item.regression_item = path.resolve(screenshotsPath, item.hash+"_regression.png");
+	item.reference_item = path.resolve(screenshotsPath, item.hash+"_reference.png");
+	item.difference_item = path.resolve(screenshotsPath, item.hash + "_difference.png");
 	item.match = undefined;
 	item.screenshot = undefined;
 	item.fresh = undefined;

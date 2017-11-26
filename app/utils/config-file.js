@@ -15,7 +15,7 @@
 // imports
 const fs = require("fs-extra-plus");
 const path = require("path");
-const defaults = { "from": "default", "path": path.join(process.cwd(), "./screenshots") };
+const defaults = { "from": "default", "path": path.join(process.cwd(), "./screenshots") , "vw": 1024,"vh": 786, "threshold": 0.01};
 const rcfile = path.join(process.cwd(), ".chigairc.json");
 
 /**
@@ -39,10 +39,25 @@ module.exports = async() => {
 		}
 		await fs.ensureDir(screenshotPath);
 
+		if(!chigairc.vw) {
+			chigairc.vw = defaults.vw;
+		}
+
+		if (!chigairc.vh) {
+			chigairc.vh = defaults.vh;
+		}
+
+		if (!chigairc.threshold) {
+			chigairc.threshold = defaults.threshold;
+		}
+
 		// return options
 		return {
 			"from": rcfile,
-			"path": screenshotPath
+			"path": screenshotPath,
+			"vw": chigairc.vw,
+			"vh": chigairc.vh,
+			"threshold": chigairc.threshold
 		};
 	} catch (error) {
 		// return defaults

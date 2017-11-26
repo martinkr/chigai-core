@@ -7,6 +7,10 @@ const crypto = require("crypto");
 const thisModulePath = "data-object";
 const thisModule = require("./../../app/utils/" + thisModulePath);
 
+
+const rcfile = path.join(process.cwd(), ".chigairc.json");
+const customPath = "./test/_tmp/custom";
+
 /** creates a data-object as argument */
 const createItem = (uri, options) => {
 	let item = {}
@@ -85,10 +89,13 @@ describe(`the module ${thisModulePath}`, () => {
 			result.path.should.equal(path.join(process.cwd(), "./screenshots"));
 		}));
 
-		it("should return a data object with: a custom path if \"path\" is a given option", (async () => {
+		it("should return a data object with: a custom path if there's a .chigairc.json file", (async () => {
+			await fs.remove(rcfile);
+			await fs.writeFile(rcfile, JSON.stringify({"path": customPath}));
 			let result;
-			result = await thisModule(createItem("http://", {"path": "./../myscreenshots"}));
-			result.path.should.equal(path.join(process.cwd(), "./../myscreenshots"));
+			result = await thisModule(createItem("http://"));
+			await fs.remove(rcfile);
+			result.path.should.equal(path.resolve(customPath));
 		}));
 
 

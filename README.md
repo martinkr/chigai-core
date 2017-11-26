@@ -18,14 +18,20 @@ Chigai-core is not meant to be used directly. Use the CLI or the API modules. Th
 Provide a url and options such as the viewport width (default: 1024), viewport height (default: 720) or a threshold (default: 0.01 = 1%) for the image comparison. Chigai-core creates a new screenshot of the whole page and compares it to the last specified reference. If their difference is lower than the given threshold, ```match```will be ```true```. Otherwise, ```match``` becomes ```false```.
 
 ## .chigai.json
+You can store project wide setttings in this file. It takes the same key-value-pairs as the options-object. Plus an additional ```path``` property.
 ### path
 There's the possiblitly to pass a custom path to chigai. It's relative to your working directory.
 Use this to share your reference items (e.g. via source control, rsync ...).
+
 ```JavaScript
 {
-	"path" : "./myscreenshots"
+	"path" : "./myscreenshots",
+	"threshold": 0.5,
+	"vw": 1200,
+	"vh" : 800
 }
 ```
+
 
 ## Fresh reference
 If you know  you changed the layout, just set a new reference item before running the tests again.

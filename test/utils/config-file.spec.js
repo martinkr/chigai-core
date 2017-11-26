@@ -20,8 +20,12 @@ const thisModulePath = "utils/config-file";
 const thisModule = require("./../../app/" + thisModulePath);
 
 const rcfile = path.join(process.cwd(), ".chigairc.json");
-const defaults = { "path": path.join(process.cwd(), "./screenshots") };
+const defaults = { "path": path.join(process.cwd(), "./screenshots") , "vw": 1024,"vh": 786, "threshold": 0.01};
 const customPath = "./test/_tmp/custom";
+const customVW = 200;
+const customVH = 300;
+const customThreshold = 1;
+
 const rcfileOptions = { "path": path.join(process.cwd(), customPath) };
 
 
@@ -103,12 +107,33 @@ describe(`the module ${thisModulePath}`, () => {
 			result.path.should.equal(defaults.path);
 		}));
 
+		it("should return the default vh if the vh is missing  ", (async () => {
+			await fs.writeFile(rcfile, JSON.stringify({"x": true}));
+			let result = await thisModule();
+			// exists = await fs.pathExists(result.regression_item);
+			result.vh.should.equal(defaults.vh);
+		}));
+
+		it("should return the default vw if the vw is missing  ", (async () => {
+			await fs.writeFile(rcfile, JSON.stringify({"x": true}));
+			let result = await thisModule();
+			// exists = await fs.pathExists(result.regression_item);
+			result.vw.should.equal(defaults.vw);
+		}));
+
+		it("should return the default threshold if the threshold is missing  ", (async () => {
+			await fs.writeFile(rcfile, JSON.stringify({"x": true}));
+			let result = await thisModule();
+			// exists = await fs.pathExists(result.regression_item);
+			result.threshold.should.equal(defaults.threshold);
+		}));
+
 	});
 	describe("should work as expected and it", () => {
 
 		beforeEach(async () => {
 			await fs.remove(rcfile);
-			await fs.writeFile(rcfile, JSON.stringify({"path": customPath}));
+			await fs.writeFile(rcfile, JSON.stringify({"path": customPath, "vw": customVW, "vh": customVH, "threshold": customThreshold}));
 		});
 
 		after(async() => {
@@ -134,6 +159,23 @@ describe(`the module ${thisModulePath}`, () => {
 			result = await fs.pathExists(rcfileOptions.path);
 			result.should.be.ok;
 		}));
+
+		it("should return the custom vw", (async () => {
+			let result = await thisModule();
+			result.vw.should.equal(customVW);
+		}));
+
+		it("should return the custom vh", (async () => {
+			let result = await thisModule();
+			result.vh.should.equal(customVH);
+		}));
+
+		it("should return the custom threshold", (async () => {
+			let result = await thisModule();
+			result.threshold.should.equal(customThreshold);
+		}));
+
+
 
 	});
 });
