@@ -31,11 +31,12 @@ const currentModule = "data-object"
  * @returns {Object} an object containing all necessary properties
  */
 module.exports = async (object) => {
+
 	const uri = object.uri;
 	const config = await configFile();
 	const options = Object.assign({}, config, object.options);
-	const screenshotsPath = config.path;
 
+	const screenshotsPath = options.path;
 	if (!uri || typeof (uri) !== "string") {
 		throw new Error(`${currentModule} missing location item.uri`);
 	}

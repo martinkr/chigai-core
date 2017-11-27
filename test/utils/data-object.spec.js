@@ -253,6 +253,51 @@ describe(`the module ${thisModulePath}`, () => {
 			result.viewport.height.should.be.a("number").and.equal(786);
 		}));
 
+		it("should return a data object where the passed options take precedence over .chigairc.json for \"path\"", (async () => {
+			await fs.remove(rcfile);
+			await fs.writeFile(rcfile, JSON.stringify({"path": customPath}));
+			let result;
+			let expectation = "foobar"
+			let item = createItem("http://",{ "path": expectation});
+			result = await thisModule(item);
+			await fs.remove(rcfile);
+			result.path.should.equal(path.resolve(expectation));
+		}));
+
+		it("should return a data object where the passed options take precedence over .chigairc.json for \"vh\"", (async () => {
+			await fs.remove(rcfile);
+			await fs.writeFile(rcfile, JSON.stringify({"vh": 99}));
+			let result;
+			let expectation = 999;
+			let item = createItem("http://",{ "vh": expectation});
+			result = await thisModule(item);
+			await fs.remove(rcfile);
+			result.viewport.height.should.equal(expectation);
+		}));
+
+		it("should return a data object where the passed options take precedence over .chigairc.json for \"vw\"", (async () => {
+			await fs.remove(rcfile);
+			await fs.writeFile(rcfile, JSON.stringify({"vw": 99}));
+			let result;
+			let expectation = 999;
+			let item = createItem("http://",{ "vw": expectation});
+			result = await thisModule(item);
+			await fs.remove(rcfile);
+			result.viewport.width.should.equal(expectation);
+		}));
+
+		it("should return a data object where the passed options take precedence over .chigairc.json for \"threshold\"", (async () => {
+			await fs.remove(rcfile);
+			await fs.writeFile(rcfile, JSON.stringify({"threshold": 0.9}));
+			let result;
+			let expectation = 0.99;
+			let item = createItem("http://",{ "threshold": expectation});
+			result = await thisModule(item);
+			await fs.remove(rcfile);
+			result.threshold.should.equal(expectation);
+		}));
+
+
 
 	});
 });
