@@ -23,7 +23,7 @@ const reference = require("./api/fresh-reference.js");
 const API = {
 
 	/**
-	 * Handles the regression test for a list of items.
+	 * Handles the regression test for an item.
 	 * Each item requires a property "uri" and can have
 	 * an optional set of options.
 	 * @async
@@ -42,7 +42,7 @@ const API = {
 	},
 
 	/**
-	 * Handles the regression test for a list of items.
+	 * Creates a new reference for an item.
 	 * Each item requires a property "uri" and can have
 	 * an optional set of options.
 	 * @async

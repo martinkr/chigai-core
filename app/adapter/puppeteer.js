@@ -65,6 +65,11 @@ module.exports = async(item) => {
 		page = await browser.newPage();
 		await page.setViewport(viewport);
 		await page.goto(item.uri);
+
+		if (Number(item.wait) > 0) {
+			await page.waitFor(Number(item.wait));
+		}
+
 		await page.screenshot({
 			"fullPage": true,
 			"path": item.regression_item

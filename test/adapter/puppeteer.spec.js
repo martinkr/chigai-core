@@ -33,8 +33,9 @@ const server = require("chigai-mock-server");
 let testServer;
 
 /** creates a data-object as argument */
-const createItem = () => {
+const createItem = (wait) => {
 	let item = {}
+	item.wait = wait || 0;
 	item.uri = `http://localhost:${port}/static`;
 	item.viewportWidth = 500;
 	item.viewportHeight = 500;
@@ -97,6 +98,13 @@ describe(`the module ${thisModulePath}`, () => {
 			result.screenshot.should.be.ok;
 		}));
 
+		it("should wait and create a screenshot based on the item", (async() => {
+			let time = Date.now();
+			let wait = 5000;
+			result = await thisModule(createItem(wait));
+			(Date.now() - time).should.be.above(wait - 1);
+		}));
+
 		it("should save the screenshot properly", (async() => {
 			let result;
 			result = await thisModule(createItem());
@@ -115,7 +123,6 @@ describe(`the module ${thisModulePath}`, () => {
 			result = await fs.pathExists(result.regression_item);
 			result.should.be.ok;
 		}));
-
 
 	});
 });

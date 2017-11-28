@@ -35,28 +35,33 @@ module.exports = async (object) => {
 	const uri = object.uri;
 	const config = await configFile();
 	const options = Object.assign({}, config, object.options);
-
 	const screenshotsPath = options.path;
+
 	if (!uri || typeof (uri) !== "string") {
 		throw new Error(`${currentModule} missing location item.uri`);
 	}
 
 	let item = { viewport: {} };
+
 	item.uri = uri;
-	// item.threshold = 0.01;
+
+	// taken from .rcfile < object.options
 	item.threshold = !!Number(options.threshold) && typeof(options.threshold) !== "boolean" ? Number(options.threshold) : config.threshold;
 	item.viewport.width = !!Number(options.vw) && typeof(options.vw) !== "boolean" ? Number(options.vw) : config.vw;
 	item.viewport.height = !!Number(options.vh) && typeof(options.vh) !== "boolean" ? Number(options.vh) : config.vh;
-
-	item.timestamp_iso = new Date(new Date().getTime()).toString();
-	item.hash = crypto.createHash("sha512").update(uri + item.viewport.width + item.viewport.height).digest("hex");
+	item.wait = !!Number(options.wait) && typeof(options.wait) !== "boolean" ? Number(options.wait) : config.wait;
 	item.path = path.resolve(screenshotsPath);
+
+	// internal
+	item.timestamp_iso = new Date(new Date().getTime()).toString();
+	item.hash = crypto.createHash("sha512").update(uri + item.viewport.width + item.viewport.height + item.wait).digest("hex");
 	item.regression_item = path.resolve(screenshotsPath, item.hash+"_regression.png");
 	item.reference_item = path.resolve(screenshotsPath, item.hash+"_reference.png");
 	item.difference_item = path.resolve(screenshotsPath, item.hash + "_difference.png");
 	item.match = undefined;
 	item.screenshot = undefined;
 	item.fresh = undefined;
-	item.debug = ` ${item.uri}: vw ${item.viewport.width}, vh${item.viewport.height} => hash: ${item.hash}`;
+	// item.debug = ` ${item.uri}: vw ${item.viewport.width}, vh${item.viewport.height} => hash: ${item.hash}`;
+
 	return item;
 }

@@ -20,11 +20,12 @@ const thisModulePath = "utils/config-file";
 const thisModule = require("./../../app/" + thisModulePath);
 
 const rcfile = path.join(process.cwd(), ".chigairc.json");
-const defaults = { "path": path.join(process.cwd(), "./screenshots") , "vw": 1024,"vh": 786, "threshold": 0.01};
+const defaults = { "path": path.join(process.cwd(), "./screenshots") , "vw": 1024,"vh": 786, "threshold": 0.01, "wait": 0};
 const customPath = "./test/_tmp/custom";
 const customVW = 200;
 const customVH = 300;
 const customThreshold = 1;
+const customWait = 9999;
 
 const rcfileOptions = { "path": path.join(process.cwd(), customPath) };
 
@@ -47,13 +48,11 @@ describe(`the module ${thisModulePath}`, () => {
 
 		it("should return the label for default ", (async () => {
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.from.should.equal("default");
 		}));
 
 		it("should return the default path ", (async () => {
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.path.should.equal(defaults.path);
 		}));
 
@@ -72,13 +71,11 @@ describe(`the module ${thisModulePath}`, () => {
 
 		it("should return the label for default ", (async () => {
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.from.should.equal("default");
 		}));
 
 		it("should return the default path ", (async () => {
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.path.should.equal(defaults.path);
 		}));
 
@@ -96,35 +93,36 @@ describe(`the module ${thisModulePath}`, () => {
 		it("should return the label for the .chigairc.json file ", (async () => {
 			await fs.writeFile(rcfile, JSON.stringify({"x": true}));
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.from.should.have.a.string(".chigairc.json");
 		}));
 
 		it("should return the default path if the path is missing  ", (async () => {
 			await fs.writeFile(rcfile, JSON.stringify({"x": true}));
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.path.should.equal(defaults.path);
 		}));
 
 		it("should return the default vh if the vh is missing  ", (async () => {
 			await fs.writeFile(rcfile, JSON.stringify({"x": true}));
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.vh.should.equal(defaults.vh);
 		}));
 
 		it("should return the default vw if the vw is missing  ", (async () => {
 			await fs.writeFile(rcfile, JSON.stringify({"x": true}));
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.vw.should.equal(defaults.vw);
 		}));
 
 		it("should return the default threshold if the threshold is missing  ", (async () => {
 			await fs.writeFile(rcfile, JSON.stringify({"x": true}));
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
+			result.threshold.should.equal(defaults.threshold);
+		}));
+
+		it("should return the default wait-value if the wait-value is missing  ", (async () => {
+			await fs.writeFile(rcfile, JSON.stringify({"x": true}));
+			let result = await thisModule();
 			result.threshold.should.equal(defaults.threshold);
 		}));
 
@@ -133,7 +131,7 @@ describe(`the module ${thisModulePath}`, () => {
 
 		beforeEach(async () => {
 			await fs.remove(rcfile);
-			await fs.writeFile(rcfile, JSON.stringify({"path": customPath, "vw": customVW, "vh": customVH, "threshold": customThreshold}));
+			await fs.writeFile(rcfile, JSON.stringify({"path": customPath, "vw": customVW, "vh": customVH, "threshold": customThreshold, "wait": customWait}));
 		});
 
 		after(async() => {
@@ -142,13 +140,11 @@ describe(`the module ${thisModulePath}`, () => {
 
 		it("should return the label for the .chigairc.json file ", (async () => {
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.from.should.have.a.string(".chigairc.json");
 		}));
 
 		it("should return the custom path ", (async () => {
 			let result = await thisModule();
-			// exists = await fs.pathExists(result.regression_item);
 			result.path.should.equal(rcfileOptions.path);
 		}));
 
@@ -175,7 +171,10 @@ describe(`the module ${thisModulePath}`, () => {
 			result.threshold.should.equal(customThreshold);
 		}));
 
-
+		it("should return the custom wait-value", (async () => {
+			let result = await thisModule();
+			result.wait.should.equal(customWait);
+		}));
 
 	});
 });
