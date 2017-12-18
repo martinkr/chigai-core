@@ -1,6 +1,6 @@
 {
   "name": "chigai-core",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Chigai: modern visual regression testing. CORE module.",
   "main": "./app/main.js",
   "license": "MIT",
