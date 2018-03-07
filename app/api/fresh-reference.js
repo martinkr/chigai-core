@@ -44,7 +44,7 @@ module.exports = async (items) => {
 		return await dataObject(item);
 	}));
 
-	await Promise.all(items.map(async (item) => {
+	items = await Promise.all(items.map(async (item) => {
 		let screenshotItem = item;
 		await fs.ensureDir(screenshotItem.path);
 		await fs.remove(screenshotItem.reference_item);

@@ -22,6 +22,7 @@ const fs = require("fs-extra-plus");
 const compare = require("./../adapter/blink-diff");
 const screenshot = require("./../adapter/puppeteer");
 const reference = require("./../utils/reference-item");
+const toJson = require("./../utils/results-to-json");
 const dataObject = require("./../utils/data-object");
 
 // whoami
@@ -46,7 +47,7 @@ module.exports = async (items) => {
 		return await dataObject(item);
 	}));
 
-	await Promise.all(items.map(async (item) => {
+	items = await Promise.all(items.map(async (item) => {
 		let screenshotItem = item;
 		await fs.ensureDir(screenshotItem.path);
 		screenshotItem = await screenshot(screenshotItem);
@@ -54,6 +55,13 @@ module.exports = async (items) => {
 		screenshotItem = await compare(screenshotItem);
 		return screenshotItem;
 	}));
+
+	try {
+		await toJson.write(items);
+	} catch (err) {
+		/* istanbul ignore next */
+		return err;
+	}
 
 	return items;
 };

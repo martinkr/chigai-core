@@ -23,6 +23,7 @@
 const fs = require("fs-extra-plus");
 const path = require("path");
 const crypto = require("crypto");
+
 const proxyquire = require("proxyquire").noCallThru();
 
 const thisModulePath = "api/check-regression";
@@ -33,13 +34,17 @@ const port = 3000;
 const server = require("chigai-mock-server");
 let testServer;
 
+// create stubs for spying on them
+let stubResultsToJson = { "write": (items) => new Promise((resolve, reject) => { resolve(items); }) };
+let spyResultsToJson = sinon.spy(stubResultsToJson, "write");
 // mock dependencies
 const stubAndReturn = ((value) => {
 	thisModule = proxyquire("./../../app/" + thisModulePath,
 		{
 			"./../adapter/puppeteer": (item) => { return new Promise((resolve, reject) => { item.screenshot = value; resolve(item); }); },
 			"./../adapter/blink-diff": (item) => { return new Promise((resolve, reject) => { item.match = value; resolve(item); }); },
-			"./../utils/reference-item": (item) => { return new Promise((resolve, reject) => { item.fresh = value; resolve(item); }); }
+			"./../utils/reference-item": (item) => { return new Promise((resolve, reject) => { item.fresh = value; resolve(item); }); },
+			"./../utils/results-to-json": { "write": spyResultsToJson },
 		}
 	);
 });
@@ -66,9 +71,11 @@ const createItem = () => {
 	return item;
 };
 
+
 describe(`the module ${thisModulePath}`, () => {
 
 	afterEach((done) => {
+		spyResultsToJson.reset();
 		testServer.close();
 		done();
 	});
@@ -80,6 +87,7 @@ describe(`the module ${thisModulePath}`, () => {
 	after(async() => {
 		await fs.emptyDir(dataPathDefault);
 		await fs.remove(dataPathCustom);
+		spyResultsToJson.restore();
 	});
 
 	describe("should handle errors", () => {
@@ -200,6 +208,14 @@ describe(`the module ${thisModulePath}`, () => {
 			result = await thisModule([createItem()]);
 			(result.shift().match).should.be.false
 		}));
+
+		// write to json
+		it("should write the results to file by calling the \"utils/results-to-json\" module", (async () => {
+			stubAndReturn(false);
+			await thisModule([createItem()]);
+			spyResultsToJson.should.have.been.calledOnce;
+		}));
+
 
 	});
 
