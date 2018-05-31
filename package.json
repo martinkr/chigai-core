@@ -1,6 +1,6 @@
 {
   "name": "chigai-core",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Chigai: modern visual regression testing. CORE module.",
   "main": "./app/main.js",
   "license": "MIT",
@@ -45,6 +45,7 @@
     "chai": "4.1.1",
     "chigai-mock-server": "^1.0.0",
     "eslint": "4.4.1",
+    "image-size": "https://github.com/image-size/image-size",
     "mocha": "3.5.0",
     "nyc": "^11.5.0",
     "proxyquire": "^1.8.0",

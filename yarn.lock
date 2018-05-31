@@ -1293,6 +1293,10 @@ ignore@^3.3.3:
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.5.tgz#c4e715455f6073a8d7e5dae72d2fc9d71663dba6"
 
+"image-size@https://github.com/image-size/image-size":
+  version "0.6.2"
+  resolved "https://github.com/image-size/image-size#1c30f8357cc432c456538e6f8c6ac02898f03510"
+
 imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
