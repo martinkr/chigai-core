@@ -115,7 +115,7 @@ describe(`the module ${thisModulePath}`, () => {
 		it("should create a screenshot with the default height", (async () => {
 			let result;
 			result = await thisModule(createItem());
-			console.log("default result.height", result.height, defaultHeight)
+			result = imageSize(result.regression_item);
 			result.height.should.equal(defaultHeight);
 		}));
 
@@ -123,7 +123,6 @@ describe(`the module ${thisModulePath}`, () => {
 			let result;
 			result = await thisModule(createItem());
 			result = imageSize(result.regression_item);
-			console.log("default result.width", result.width, defaultWidth)
 			result.width.should.equal(defaultWidth);
 		}));
 
@@ -134,7 +133,6 @@ describe(`the module ${thisModulePath}`, () => {
 				"width": _width
 			}));
 			result = imageSize(result.regression_item);
-			console.log("supplied result.height", result.width, _width)
 			result.width.should.equal(_width);
 		}));
 
@@ -146,7 +144,6 @@ describe(`the module ${thisModulePath}`, () => {
 				"height": _height
 			}));
 			result = imageSize(result.regression_item);
-			console.log("supplied result.height", result.height, _height)
 			result.height.should.equal(_height);
 		}));
 

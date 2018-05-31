@@ -77,7 +77,9 @@ const differenceItem = path.join(dataPathDefault, hash + "difference.png");
 
 /** creates a data-object as argument */
 const createItem = () => {
-	let item = { "viewport": {} };
+	let item = {
+		"viewport": {}
+	};
 	item.uri = `http://localhost:${port}/static`;
 	item.viewport.width = 500;
 	item.viewport.height = 500;
@@ -93,7 +95,7 @@ const createItem = () => {
 describe(`the module ${thisModulePath}`, () => {
 
 	afterEach((done) => {
-		spyResultsToJson.reset();
+		spyResultsToJson.resetHistory();
 		testServer.close();
 		done();
 	});
