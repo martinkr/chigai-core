@@ -13,7 +13,7 @@ const customPath = "./test/_tmp/custom";
 
 /** creates a data-object as argument */
 const createItem = (uri, options) => {
-	let item = {}
+	let item = { "viewport": {} };
 	item.uri = uri;
 	item.options = options;
 	return item;

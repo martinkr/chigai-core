@@ -52,7 +52,7 @@ const referenceItem = path.join("./", "screenshots", hash + "_reference.png");
 
 /** creates a data-object as argument */
 const createItem = () => {
-	let item = {}
+	let item = { "viewport": {} };
 	item.uri = `http://localhost:${port}/static`;
 	item.hash = hash;
 	item.options = {};

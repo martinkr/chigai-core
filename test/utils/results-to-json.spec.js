@@ -29,7 +29,7 @@ const hash = crypto.createHash("sha512").update(`http://localhost:3000/static` +
 
 /** creates a data-object as argument */
 const createItem = (suffix, counter) => {
-	let item = {}
+	let item = { "viewport": {} };
 	item.hash = suffix ? hash + suffix : hash;
 	item.path = dataPathDefault;
 	item.count = counter ? counter : 0;

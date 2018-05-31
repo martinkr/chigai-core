@@ -36,13 +36,15 @@ const defaultHeight = 500;
 
 /** creates a data-object as argument */
 const createItem = (object = {}) => {
-	let item = {}
+	let item = {
+		"viewport": {}
+	};
 	item.wait = object.wait || 0;
 	item.uri = `http://localhost:${port}/static`;
 	item.viewport = {};
-	item.viewportWidth = object.width || defaultWidth;
-	item.viewportHeight = object.height || defaultHeight;
-	item.hash = crypto.createHash("sha512").update(item.uri + item.viewportWidth + item.viewportHeight).digest("hex");
+	item.viewport.width = object.width || defaultWidth;
+	item.viewport.height = object.height || defaultHeight;
+	item.hash = crypto.createHash("sha512").update(item.uri + item.viewport.width + item.viewport.height).digest("hex");
 	item.regression_item = path.join("./", "screenshots", item.hash + "_regression.png");
 	return item;
 };
@@ -110,14 +112,14 @@ describe(`the module ${thisModulePath}`, () => {
 			(Date.now() - time).should.be.above(wait - 1);
 		}));
 
-		it.only("should create a screenshot with the default height", (async () => {
+		it("should create a screenshot with the default height", (async () => {
 			let result;
 			result = await thisModule(createItem());
 			console.log("default result.height", result.height, defaultHeight)
 			result.height.should.equal(defaultHeight);
 		}));
 
-		it.only("should create a screenshot with the default width", (async () => {
+		it("should create a screenshot with the default width", (async () => {
 			let result;
 			result = await thisModule(createItem());
 			result = imageSize(result.regression_item);
@@ -125,7 +127,7 @@ describe(`the module ${thisModulePath}`, () => {
 			result.width.should.equal(defaultWidth);
 		}));
 
-		it.only("should create a screenshot with the supplied width", (async () => {
+		it("should create a screenshot with the supplied width", (async () => {
 			let result;
 			let _width = 300;
 			result = await thisModule(createItem({
@@ -137,7 +139,7 @@ describe(`the module ${thisModulePath}`, () => {
 		}));
 
 
-		it.only("should create a screenshot with the supplied height", (async () => {
+		it("should create a screenshot with the supplied height", (async () => {
 			let result;
 			let _height = 400;
 			result = await thisModule(createItem({
@@ -160,8 +162,8 @@ describe(`the module ${thisModulePath}`, () => {
 			let result;
 			result = await thisModule((() => {
 				let ret = createItem();
-				delete ret.viewportWidth;
-				delete ret.viewportHeight;
+				delete ret.viewport.width;
+				delete ret.viewport.height;
 				return ret;
 			})());
 			result = await fs.pathExists(result.regression_item);

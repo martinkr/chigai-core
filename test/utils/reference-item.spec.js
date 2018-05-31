@@ -1,4 +1,3 @@
-
 /**
  * Specs for the reference-item utility module
  * This module ensures the existence of a reference item.
@@ -34,10 +33,10 @@ const referenceItem = path.join("./", "screenshots", hash + "_reference.png");
 
 /** creates a data-object as argument */
 const createItem = () => {
-	let item = {}
+	let item = { "viewport": {} };
 	item.uri = "http://rebel-mother.surge.sh";
-	item.viewportWidth = 500;
-	item.viewportHeight = 500;
+	item.viewport.width = 500;
+	item.viewport.height = 500;
 	item.hash = hash;
 	item.regression_item = regressionItem;
 	item.reference_item = referenceItem;
@@ -46,14 +45,14 @@ const createItem = () => {
 
 describe(`the module ${thisModulePath}`, () => {
 
-	beforeEach(async() => {
+	beforeEach(async () => {
 		await fs.emptyDir(dataPath);
 		await fs.ensureFile(regressionItem);
 		await fs.ensureFile(referenceItem);
 	});
 
 
-	after(async() => {
+	after(async () => {
 		await fs.emptyDir(path.join("./", "screenshots"));
 	});
 
@@ -82,7 +81,7 @@ describe(`the module ${thisModulePath}`, () => {
 				await fs.remove(regressionItem);
 				await thisModule(createItem());
 			} catch (error) {
-				return  error.should.be.an.instanceof(Error);
+				return error.should.be.an.instanceof(Error);
 			}
 			throw new Error("should throw");
 		}));
@@ -91,13 +90,13 @@ describe(`the module ${thisModulePath}`, () => {
 
 	describe("should work as expected", () => {
 
-		it("should return an object", (async() => {
+		it("should return an object", (async () => {
 			let result;
 			result = await thisModule(createItem());
 			result.should.be.an("object");
 		}));
 
-		it("should create a regression item if none exists", (async() => {
+		it("should create a regression item if none exists", (async () => {
 			let result;
 			let exists;
 			await fs.remove(referenceItem);
@@ -106,7 +105,7 @@ describe(`the module ${thisModulePath}`, () => {
 			exists.should.be.ok;
 		}));
 
-		it("should set a flag if there was no regression_item", (async() => {
+		it("should set a flag if there was no regression_item", (async () => {
 			let result;
 			let exists;
 			await fs.remove(referenceItem);
@@ -114,7 +113,7 @@ describe(`the module ${thisModulePath}`, () => {
 			result.fresh.should.be.ok;
 		}));
 
-		it("should be no flag if there was a regression_item", (async() => {
+		it("should be no flag if there was a regression_item", (async () => {
 			let result;
 			await fs.ensureFile(regressionItem);
 			result = await thisModule(createItem());

@@ -1,4 +1,3 @@
-
 /**
  * Specs for the blink-diff adapter
  *
@@ -27,12 +26,14 @@ let testServer;
 
 /** creates a data-object as argument */
 const createItem = () => {
-	let item = {}
+	let item = {
+		"viewport": {}
+	};
 	item.uri = `http://localhost:${port}/static`;
 	item.threshold = 0.01;
-	item.viewportWidth = 500;
-	item.viewportHeight = 500;
-	item.hash = crypto.createHash("sha512").update(item.uri + item.viewportWidth + item.viewportHeight).digest("hex");
+	item.viewport.width = 500;
+	item.viewport.height = 500;
+	item.hash = crypto.createHash("sha512").update(item.uri + item.viewport.width + item.viewport.height).digest("hex");
 	item.regression_item = path.join(dataPath, "first" + ".png");
 	item.reference_item = path.join(dataPath, "second" + ".png");
 	return item;
@@ -51,7 +52,7 @@ describe(`the module ${thisModulePath}`, () => {
 		testServer = server.listen(port);
 	});
 
-	after(async() => {
+	after(async () => {
 		await fs.emptyDir(path.join("./", "screenshots"));
 	});
 
@@ -66,7 +67,7 @@ describe(`the module ${thisModulePath}`, () => {
 					return ret;
 				})());
 			} catch (error) {
-				return  error.should.be.an.instanceof(Error);
+				return error.should.be.an.instanceof(Error);
 			}
 			throw new Error("should throw");
 		}));
@@ -76,7 +77,7 @@ describe(`the module ${thisModulePath}`, () => {
 
 	describe("should work as expected", () => {
 
-		it("should return false if the images differ", (async() => {
+		it("should return false if the images differ", (async () => {
 			let result;
 			result = await thisModule((() => {
 				let ret = createItem();
@@ -87,7 +88,7 @@ describe(`the module ${thisModulePath}`, () => {
 			result.match.should.not.be.ok;
 		}));
 
-		it("should return true if the images are the same", (async() => {
+		it("should return true if the images are the same", (async () => {
 			let result;
 			result = await thisModule((() => {
 				let ret = createItem();

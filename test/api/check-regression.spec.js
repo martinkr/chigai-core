@@ -1,4 +1,3 @@
-
 /**
  * Specs for the regression check module.
  * Handles the regresion test for the provided items
@@ -35,18 +34,37 @@ const server = require("chigai-mock-server");
 let testServer;
 
 // create stubs for spying on them
-let stubResultsToJson = { "write": (items) => new Promise((resolve, reject) => { resolve(items); }) };
+let stubResultsToJson = {
+	"write": (items) => new Promise((resolve, reject) => {
+		resolve(items);
+	})
+};
 let spyResultsToJson = sinon.spy(stubResultsToJson, "write");
 // mock dependencies
 const stubAndReturn = ((value) => {
-	thisModule = proxyquire("./../../app/" + thisModulePath,
-		{
-			"./../adapter/puppeteer": (item) => { return new Promise((resolve, reject) => { item.screenshot = value; resolve(item); }); },
-			"./../adapter/blink-diff": (item) => { return new Promise((resolve, reject) => { item.match = value; resolve(item); }); },
-			"./../utils/reference-item": (item) => { return new Promise((resolve, reject) => { item.fresh = value; resolve(item); }); },
-			"./../utils/results-to-json": { "write": spyResultsToJson },
-		}
-	);
+	thisModule = proxyquire("./../../app/" + thisModulePath, {
+		"./../adapter/puppeteer": (item) => {
+			return new Promise((resolve, reject) => {
+				item.screenshot = value;
+				resolve(item);
+			});
+		},
+		"./../adapter/blink-diff": (item) => {
+			return new Promise((resolve, reject) => {
+				item.match = value;
+				resolve(item);
+			});
+		},
+		"./../utils/reference-item": (item) => {
+			return new Promise((resolve, reject) => {
+				item.fresh = value;
+				resolve(item);
+			});
+		},
+		"./../utils/results-to-json": {
+			"write": spyResultsToJson
+		},
+	});
 });
 
 // setup data
@@ -59,10 +77,10 @@ const differenceItem = path.join(dataPathDefault, hash + "difference.png");
 
 /** creates a data-object as argument */
 const createItem = () => {
-	let item = {}
+	let item = { "viewport": {} };
 	item.uri = `http://localhost:${port}/static`;
-	item.viewportWidth = 500;
-	item.viewportHeight = 500;
+	item.viewport.width = 500;
+	item.viewport.height = 500;
 	item.hash = hash;
 	item.regression_item = regressionItem;
 	item.reference_item = referenceItem;
@@ -84,7 +102,7 @@ describe(`the module ${thisModulePath}`, () => {
 		testServer = server.listen(port);
 	});
 
-	after(async() => {
+	after(async () => {
 		await fs.emptyDir(dataPathDefault);
 		await fs.remove(dataPathCustom);
 		spyResultsToJson.restore();
@@ -121,7 +139,9 @@ describe(`the module ${thisModulePath}`, () => {
 
 		it("should throw if there's no propery \"uri\" in the object", (async () => {
 			try {
-				await thisModule([{ "foo": "bar" }]);
+				await thisModule([{
+					"foo": "bar"
+				}]);
 			} catch (error) {
 				return error.should.be.an.instanceof(Error);
 			}
@@ -132,7 +152,7 @@ describe(`the module ${thisModulePath}`, () => {
 
 	describe("should work as expected", () => {
 
-		it("should ensure the screenshot directory is available", (async() => {
+		it("should ensure the screenshot directory is available", (async () => {
 			let result;
 			let item = createItem();
 			item.options.path = dataPathCustom;
