@@ -1,4 +1,3 @@
-
 /**
  * Specs for the main entry point
  * This module provides the external api of chigai-core
@@ -18,6 +17,7 @@ const fs = require("fs-extra-plus");
 
 const thisModulePath = "main";
 const thisModule = require("./../app/" + thisModulePath);
+const imageSize = require("image-size");
 
 const port = 3000;
 const server = require("chigai-mock-server");
@@ -39,7 +39,7 @@ describe(`the module ${thisModulePath}`, () => {
 		await fs.emptyDir(path.join("./", "screenshots"));
 	});
 
-	after(async() => {
+	after(async () => {
 		await fs.emptyDir(path.join("./", "screenshots"));
 	});
 
@@ -69,13 +69,19 @@ describe(`the module ${thisModulePath}`, () => {
 
 		it("should return an array", (async () => {
 			let result;
-			result = await thisModule.regression(uriStatic, {"vw": 500, "vh": 500});
+			result = await thisModule.regression(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			result.should.be.an("array");
 		}));
 
 		it("should return an array with one item", (async () => {
 			let result;
-			result = await thisModule.regression(uriStatic, {"vw": 500, "vh": 500});
+			result = await thisModule.regression(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			result.should.have.a.lengthOf(1);
 		}));
 
@@ -83,18 +89,102 @@ describe(`the module ${thisModulePath}`, () => {
 			let result;
 			let resultItem;
 			let exists;
-			result = await thisModule.regression(uriStatic, { "vw": 500, "vh": 500 });
+			result = await thisModule.regression(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			resultItem = result.shift();
 			exists = await fs.pathExists((resultItem.regression_item));
 			resultItem.screenshot.should.be.ok;
 			exists.should.be.ok;
 		}));
 
+
+		it("should create a screenshot of the given url - with the default \"width\" if no \"vw\" is given", (async () => {
+			let result;
+			let resultItem;
+			result = await thisModule.regression(uriStatic, {
+				"vh": 500
+			});
+			resultItem = result.shift();
+			result = imageSize(resultItem.regression_item);
+			result.width.should.equal(1024);
+		}));
+
+
+		it("should create a screenshot of the given url - with the default \"height\" if no \"vh\" is given", (async () => {
+			let result;
+			let resultItem;
+			result = await thisModule.regression(uriStatic, {
+				"vw": 500
+			});
+			resultItem = result.shift();
+			result = imageSize(resultItem.regression_item);
+			result.height.should.equal(786);
+		}));
+
+		it("should create a screenshot of the given url - with the supplied \"width\" if a \"vw\"-option is given", (async () => {
+			let result;
+			let resultItem;
+			result = await thisModule.regression(uriStatic, {
+				"vw": 400
+			});
+			resultItem = result.shift();
+			result = imageSize(resultItem.regression_item);
+			result.width.should.equal(400);
+		}));
+
+
+		it("should create a screenshot of the given url - with the supplied \"height\" if a \"vh\"-option is given", (async () => {
+			let result;
+			let resultItem;
+			result = await thisModule.regression(uriStatic, {
+				"vh": 400
+			});
+			resultItem = result.shift();
+			result = imageSize(resultItem.regression_item);
+			result.height.should.equal(400);
+		}));
+
+		it("should create a screenshot of the given url - but wait a \"wait\"-option is given", (async () => {
+			let time = Date.now();
+			let wait = 5000;
+
+			await thisModule.regression(uriStatic, {
+				"wait": wait
+			});
+
+			(Date.now() - time).should.be.above(wait - 1);
+		}));
+
+		it("should create a screenshot of the given url - but use the supplied threshold if a \"threshold\"-option is given", (async () => {
+			let result;
+			let resultItem;
+
+			// first
+			await thisModule.regression(uriDynamic, {});
+			// compare
+			result = await thisModule.regression(uriDynamic, {
+				"threshold": 50
+			});
+			resultItem = result.shift();
+			resultItem.match.should.be.ok;
+			// compare
+			result = await thisModule.regression(uriDynamic, {
+				"threshold": 0
+			});
+			resultItem = result.shift();
+			resultItem.match.should.not.be.ok;
+		}));
+
 		it("should create the reference item if none exists", (async () => {
 			let result;
 			let resultItem;
 			let exists;
-			result = await thisModule.regression(uriStatic, { "vw": 500, "vh": 500 });
+			result = await thisModule.regression(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			resultItem = result.shift();
 			exists = await fs.pathExists((resultItem.reference_item));
 			resultItem.screenshot.should.be.ok;
@@ -106,7 +196,10 @@ describe(`the module ${thisModulePath}`, () => {
 			let result;
 			let resultItem;
 			let exists;
-			result = await thisModule.regression(uriStatic, { "vw": 500, "vh": 500 });
+			result = await thisModule.regression(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			resultItem = result.shift();
 			exists = await fs.pathExists((resultItem.difference_item));
 			resultItem.screenshot.should.be.ok;
@@ -117,9 +210,15 @@ describe(`the module ${thisModulePath}`, () => {
 			let result;
 			let resultItem;
 			// first
-			result = await thisModule.regression(uriStatic, { "vw": 500, "vh": 500 });
+			result = await thisModule.regression(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			// compare
-			result = await thisModule.regression(uriStatic, { "vw": 500, "vh": 500 });
+			result = await thisModule.regression(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			resultItem = result.shift();
 			resultItem.match.should.be.ok;
 		}));
@@ -128,16 +227,25 @@ describe(`the module ${thisModulePath}`, () => {
 			let result;
 			let resultItem;
 			// first
-			await thisModule.regression(uriDynamic, { "vw": 500, "vh": 500 });
+			await thisModule.regression(uriDynamic, {
+				"vw": 500,
+				"vh": 500
+			});
 			// compare
-			result = await thisModule.regression(uriDynamic, { "vw": 500, "vh": 500, "threshold": 0.000001});
+			result = await thisModule.regression(uriDynamic, {
+				"vw": 500,
+				"vh": 500,
+				"threshold": 0.000001
+			});
 			resultItem = result.shift();
 			resultItem.match.should.not.be.ok;
 		}));
 
 		it("should just display message on \"-d\" / \"dry run\" and return \"false\"", (async () => {
 			let result;
-			result = await thisModule.regression(uriDynamic, { "d": true });
+			result = await thisModule.regression(uriDynamic, {
+				"d": true
+			});
 			result.should.not.be.ok;
 		}));
 
@@ -170,13 +278,19 @@ describe(`the module ${thisModulePath}`, () => {
 
 		it("should return an array", (async () => {
 			let result;
-			result = await thisModule.reference(uriStatic, { "vw": 500, "vh": 500 });
+			result = await thisModule.reference(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			result.should.be.an("array");
 		}));
 
 		it("should return an array with one item", (async () => {
 			let result;
-			result = await thisModule.reference(uriStatic, { "vw": 500, "vh": 500 });
+			result = await thisModule.reference(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			result.should.have.a.lengthOf(1);
 		}));
 
@@ -184,7 +298,10 @@ describe(`the module ${thisModulePath}`, () => {
 			let result;
 			let resultItem;
 			let exists;
-			result = await thisModule.reference(uriStatic, { "vw": 500, "vh": 500 });
+			result = await thisModule.reference(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			resultItem = result.shift();
 			exists = await fs.pathExists((resultItem.reference_item));
 			resultItem.fresh.should.be.ok;
@@ -195,7 +312,10 @@ describe(`the module ${thisModulePath}`, () => {
 			let result;
 			let resultItem;
 			let exists;
-			result = await thisModule.reference(uriStatic, { "vw": 500, "vh": 500 });
+			result = await thisModule.reference(uriStatic, {
+				"vw": 500,
+				"vh": 500
+			});
 			resultItem = result.shift();
 			exists = await fs.pathExists((resultItem.reference_item));
 			resultItem.fresh.should.be.ok;
@@ -204,7 +324,9 @@ describe(`the module ${thisModulePath}`, () => {
 
 		it("should just display message on \"-d\" / \"dry run\" and return \"false\"", (async () => {
 			let result;
-			result = await thisModule.reference(uriDynamic, { "d": true });
+			result = await thisModule.reference(uriDynamic, {
+				"d": true
+			});
 			result.should.not.be.ok;
 		}));
 
