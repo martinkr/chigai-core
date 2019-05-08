@@ -39,15 +39,15 @@
   "dependencies": {
     "blink-diff": "^1.0.13",
     "fs-extra-plus": "^0.1.3",
-    "puppeteer": "^0.11.0"
+    "puppeteer": "^1.13.0"
   },
   "devDependencies": {
     "chai": "4.1.1",
     "chigai-mock-server": "^1.0.0",
-    "eslint": "4.4.1",
+    "eslint": "4.18.2",
     "image-size": "https://github.com/image-size/image-size",
-    "mocha": "3.5.0",
-    "nyc": "^11.5.0",
+    "mocha": "5.0.3",
+    "nyc": "^13.2.0",
     "proxyquire": "^1.8.0",
     "sinon": "^4.4.2",
     "sinon-chai": "^3.0.0"
