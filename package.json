@@ -1,6 +1,6 @@
 {
   "name": "chigai-core",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Chigai: modern visual regression testing. CORE module.",
   "main": "./app/main.js",
   "license": "MIT",
@@ -31,7 +31,7 @@
   "scripts": {
     "eslint": "./node_modules/.bin/eslint ./app/**/*.js",
     "mocha": "./node_modules/mocha/bin/mocha",
-    "nyc": "./node_modules/.bin/nyc --clean ./node_modules/.bin/mocha",
+    "nyc": "./node_modules/.bin/nyc --clean ./node_modules/.bin/mocha --exit",
     "coverage": "./node_modules/.bin/nyc check-coverage --lines 100 --functions 100 --branches 100 --statements 100",
     "report": "./node_modules/.bin/nyc report --reporter=lcov --reporter=html",
     "test": "yarn eslint && yarn nyc && yarn report && yarn coverage"
